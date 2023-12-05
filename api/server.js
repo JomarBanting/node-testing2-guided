@@ -20,20 +20,40 @@ server.get("/hobbits", (req, res) => {
     });
 });
 
-server.get("/hobbits/id", (req, res) => {
+server.get("/hobbits/:id", (req, res) => {
   res.end()
 });
 
 server.post("/hobbits", (req, res) => {
-  res.end()
+  Hobbits.insert(req.body)
+    .then(hobbit => {
+      res.status(201).json(hobbit)
+    }).catch(err => {
+      res.status(400).json({
+        message: err.message
+      })
+    })
 });
 
 server.delete("/hobbits/:id", (req, res) => {
-  res.end()
+  const { id } = req.params
+  Hobbits.remove(id).then(hobbit => {
+    res.status(200).json(hobbit)
+  }).catch(err => {
+    res.status(400).json({
+      message: err.message
+    })
+  })
 });
 
 server.put("/hobbits/:id", (req, res) => {
-  res.end()
+  const { id } = req.params
+  Hobbits.update(id, req.body)
+    .then(hobbit => {
+      res.status(200).json(hobbit)
+    }).catch(err => {
+      res.status(400).json(err.message)
+    })
 });
 
 module.exports = server;
